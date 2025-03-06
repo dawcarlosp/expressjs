@@ -9,7 +9,7 @@ const port = 3003;
 require('dotenv').config();
 
 mongoose.connect(process.env.CADENA)
-  .then(() => console.log('Connected!'));
+  .then(() => console.log('Connected!')).catch(() => console.log('error!'));
 
 // Middleware para parsear el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
@@ -17,7 +17,7 @@ app.use(express.static('public'));
 app.use('/fotos', express.static('uploads'));
 app.set('view engine','ejs');
 app.set('views', './views');
-const modeloOrdenador = require('./models/ordenador');
+const modeloProducto = require('./models/producto');
 const User = require("./models/User");
 
 
@@ -110,9 +110,9 @@ app.post('/login', (req, res) => {
 
 // Obtener todos los ítems
 app.get("/items", (req, res) => {
-  modeloOrdenador.buscaTodos()
+  modeloProducto.buscaTodos()
   .then(
-    ordenadores=>res.status(200).json(ordenadores)
+    productos=>res.status(200).json(productos)
   )
   .catch(err=>res.status(500).send("error"))
 });

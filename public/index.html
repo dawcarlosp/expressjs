@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <title>Document</title>
 </head>
-<body>
-    <h1>Listado de ordenadores</h1>
-    <a href="/subir.html">Subir Ordenador</a>
-    <a href="/registro.html">Registro nuevo usuario</a>
-    <table id="tablaProducto">
+<body class="bg-zinc-900 text-white flex flex-col items-center">
+    <h1 class="text-5xl my-4">Listado de ordenadores</h1>
+    <a href="/subir.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2">Subir Ordenador</a>
+    <a href="/registro.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900">Registro nuevo usuario</a>
+    <table id="tablaProducto" class="mt-4">
         <thead>
-            <tr>
-                <th>id</th><th>marca</th><th>Precio</th>                
+            <tr class="bg-white text-zinc-900">
+               <th>Nombre</th>
+               <th>Precio</th>
+               <th></th>                
             </tr>
         </thead>
         <tbody id="cuerpo-tabla">
@@ -20,24 +23,25 @@
         </tbody>
     </table>
     <script>
+    
         fetch('/items')
         .then(response =>response.json())
-        .then(ordenadores=>{
+        .then(productos=>{
             
-            console.log(ordenadores);
-            for ( ordenador of ordenadores){
+            console.log(productos);
+            for ( producto of productos){
                 fila = document.createElement('tr');
-                fila.id = ordenador._id;
-                fila.innerHTML = `<td>${ordenador._id}</td>
-                <td>${ordenador.marca}</td>
-                <td>${ordenador.precio}</td>
-                <td><button onclick=eliminaOrdenador('${ordenador._id}')>Borrar ordenador</button></td>`;
+                fila.id = producto._id;
+                fila.innerHTML = `
+                <td class="border p-4">${producto.nombre}</td>
+                <td class="border p-4">${producto.precio}</td>
+                <td class="border p-4"><button onclick=eliminaProducto('${producto._id}')     class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900">Borrar producto</button></td>`;
                 document.getElementById('cuerpo-tabla').appendChild(fila);
             }
            
         })
      
-        function eliminaOrdenador(id){
+        function eliminaProducto(id){
             if (confirm("¿Está seguro/a?")){
                 fetch('/items/'+id,{
                     method:'DELETE'   
@@ -56,6 +60,7 @@
                 })
             }
         }
+        
     </script>
 </body>
 </html>

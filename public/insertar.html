@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <title>Document</title>
 </head>
-<body>
-<h1>Insertar Ordenador</h1>
-<p>Marca: <input type="text" name="marca" id="marca"></p>
-<p>Precio: <input type="number" name="precio" id="precio"></p>
-<button id="btn-insertar">Insertar</button>
+<body class="bg-zinc-900 text-white flex flex-col items-center">
+<h1  class="text-4xl my-4">Insertar Ordenador</h1>
+<p>Marca: <input type="text" name="marca" id="marca" class="border p-1 my-2"></p>
+<p>Precio: <input type="number" name="precio" id="precio" class="border p-1 my-2"></p>
+<button id="btn-insertar" class="border rounded-xl p-2 hover:bg-white hover:text-zinc-900 my-2">Insertar</button>
 
 <script>
     const insertOrdenador = ()=>{
