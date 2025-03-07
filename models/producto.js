@@ -73,10 +73,11 @@ const buscaPrecioMayor = (precioMinimo)=>{
     .catch(err=>console.error('Error al obtener los productos',err));
   }
 
-  const creaNuevoProducto = ( m , p) =>{
+  const creaNuevoProducto = ( m , p, c) =>{
     const nuevoProducto = new Producto({
         nombre: m,
-        precio: p
+        precio: p,
+        categoria: c
       });
 
       // Guardar el ordenador en la base de datos

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+        @keyframes borderGlow {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+          }
+          .before\:animate-borderGlow::before {
+            animation: borderGlow 1.5s infinite ease-in-out;
+          }
+          .animate-borderGlow {
+            animation: borderGlow 1.5s infinite ease-in-out;
+          }
+        </style>
+    <title>Productos</title>
+</head>
+<body class="bg-zinc-900 text-white flex flex-col items-center">
+    <div class="self-end mt-4">
+        <a href="insertar.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent">Nuevo Producto</a>
+        <a href="/subir.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent">Subir Producto</a>
+        <a href="index.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent me-10">Cerrar sesión</a>
+    </div>
+    <h1 class="text-5xl my-4 p-5 bg-white text-zinc-900 border-white rounded bg-transparent text-black
+                 animate-borderGlow focus:outline-none">Listado de productos</h1>
+    <table id="tablaProducto" class="mt-4 ">
+        <thead>
+            <tr class="bg-white text-zinc-900 border-white rounded bg-transparent text-black
+                 animate-borderGlow focus:outline-none">
+               <th>Nombre</th>
+               <th>Precio</th>
+               <th></th>                
+            </tr>
+        </thead>
+        <tbody id="cuerpo-tabla">
+
+        </tbody>
+    </table>
+    <script>
+    
+        fetch('/items')
+        .then(response =>response.json())
+        .then(productos=>{
+            
+            console.log(productos);
+            for ( producto of productos){
+                fila = document.createElement('tr');
+                fila.id = producto._id;
+                fila.innerHTML = `
+                <td class="border p-4">${producto.nombre}</td>
+                <td class="border p-4">${producto.precio}</td>
+                <td class="border p-4"><button onclick=eliminaProducto('${producto._id}') class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 animate-borderGlow focus:outline-none bg-transparent">Borrar producto</button></td>`;
+                document.getElementById('cuerpo-tabla').appendChild(fila);
+            }
+           
+        })
+     
+        function eliminaProducto(id){
+            if (confirm("¿Está seguro/a?")){
+                fetch('/items/'+id,{
+                    method:'DELETE'   
+                }).
+                then(response=>{
+                    if (  esponse.ok ) {
+                        document.getElementById(id).remove();
+                        alert("Ordenador eliminado");
+
+                    }
+                    else
+                    {
+                        alert("ERROR al eliminar")
+                    }
+
+                })
+            }
+        }
+        
+    </script>
+</body>
+</html>

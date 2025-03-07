@@ -5,7 +5,8 @@ const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 const app = express();
 const port = 3003;
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Habilita el procesamiento de form-data
 require('dotenv').config();
 
 mongoose.connect(process.env.CADENA)
@@ -81,9 +82,7 @@ app.post('/registro', upload.single('foto'), (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-
-  // Buscar usuario
-  User.findOne({ email })
+ User.findOne({ email })
     .then(user => {
       if (!user) {
         return res.status(400).json({ message: 'Credenciales inválidas' });
@@ -96,9 +95,7 @@ app.post('/login', (req, res) => {
           if (!isMatch) {
             return res.status(400).json({ message: 'Credenciales inválidas' });
           }
-
-
-          res.json({ message: 'Usuario autenticado correctamente' });
+          res.json({ success: true, message: 'Usuario autenticado correctamente' });
         });
     })
     .catch(error => {
@@ -131,11 +128,12 @@ app.get("/items/:id", (req, res) => {
 
 // Crear un nuevo ítem
 app.post("/items", (req, res) => {
-    marca= req.body.marca;
+    nombre= req.body.nombre;
     precio= req.body.precio;
-    modeloOrdenador.creaNuevoOrdenador(marca,precio)
+    categoria= req.body.categoria;
+    modeloProducto.creaNuevoProducto(nombre,precio,categoria)
     .then(
-      ordenador=>res.status(200).json(ordenador)
+      producto=>res.status(200).json(producto)
     )
     .catch(err=>res.status(500).send("error"))
 
