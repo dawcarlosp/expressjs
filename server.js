@@ -127,7 +127,7 @@ app.get("/items/:id", (req, res) => {
 
 
 // Crear un nuevo ítem
-app.post("/items", (req, res) => {
+app.post("/items", upload.single('foto'), (req, res) => {
     nombre= req.body.nombre;
     precio= req.body.precio;
     categoria= req.body.categoria;

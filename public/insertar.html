@@ -19,13 +19,15 @@
           }
         </style>
 </head>
-<div class="self-end mt-4">
-    <a href="productos.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent me-10">Volver atrás</a>
-    <a href="index.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent me-10">Cerrar sesión</a>
-</div>
 <body class="bg-zinc-900 text-white flex flex-col items-center">
+    <div class="self-end mt-4">
+        <a href="productos.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent ">Volver atrás</a>
+        <a href="index.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent me-10">Cerrar sesión</a>
+    </div>
 <h1  class="text-4xl my-4 bg-white text-zinc-900 border-white rounded bg-transparent text-black
                  animate-borderGlow focus:outline-none p-5">Insertar Producto</h1>
+                 <img src="imgs/productos.jpg" alt="" class="mt-2 p-2 border-4 border-white bg-transparent animate-borderGlow focus:outline-none w-50 cursor-pointer" id="fotoProducto">
+                 <input type="file" id="foto" name="foto" accept="image/*" required class="hidden">
 <p>Nombre: <input type="text" name="nombre" id="nombre" class="mt-2 p-2 border-4 border-white rounded bg-transparent text-white
     animate-borderGlow focus:outline-none"></p>
 <p>Precio: <input type="number" name="precio" id="precio" class="mt-2 p-2 border-4 border-white rounded bg-transparent text-white
@@ -35,32 +37,61 @@
 <button id="btn-insertar" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent">Insertar</button>
 
 <script>
-    const insertOrdenador = ()=>{
-        let nombre = document.getElementById('nombre').value;
-        let precio = document.getElementById('precio').value;
-        let categoria = document.getElementById('categoria').value;
-        fetch('/items',{
+    document.getElementById("fotoProducto").addEventListener("click", () => {
+        document.getElementById("foto").click();
+    })
+    // Evento cuando el usuario selecciona un archivo
+    document.getElementById("foto").addEventListener("change", (event) => {
+        const file = event.target.files[0]; // Obtener el archivo seleccionado
+
+        if (file) {
+            const reader = new FileReader(); // Crear un nuevo FileReader
+
+            // Definir lo que se debe hacer cuando el archivo se haya cargado
+            reader.onload = function (e) {
+                const preview = document.getElementById("fotoProducto"); // Obtener la imagen del contenedor
+                preview.src = e.target.result; // Establecer la imagen seleccionada como fuente
+            };
+
+            // Leer el archivo como URL de datos (data URL)
+            reader.readAsDataURL(file);
+        }
+    });
+    const insertarProducto = () => {
+        let nombre = document.getElementById('nombre').value.trim();
+        let precio = document.getElementById('precio').value.trim();
+        let categoria = document.getElementById('categoria').value.trim();
+        let foto = document.getElementById('foto').files[0];
+
+        if (!nombre || !precio || !categoria || !foto) {
+            alert("Todos los campos y la imagen son obligatorios");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('precio', precio);
+        formData.append('categoria', categoria);
+        formData.append('foto', foto);
+
+        fetch('/items', {
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/JSON'
-            },
-            body: JSON.stringify({nombre, precio, categoria})
-        }).then(
-            ordenador=>{
-                if ( ordenador ) {
-                    alert("Producto insertdo")
-                } else {
-                    alert("No se insertó el producto")
-                }
-            }
-
-        )
-        .catch(err=>{
-            alert(err);
+            body: formData
         })
-    }
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Producto insertado");
+            } else {
+                alert("No se insertó el producto");
+            }
+        })
+        .catch(err => {
+            alert("Error: " + err);
+        });
+    };
 
-    document.getElementById("btn-insertar").addEventListener('click',insertOrdenador)
+    document.getElementById("btn-insertar").addEventListener('click',insertarProducto)
 
 </script>
 </body>

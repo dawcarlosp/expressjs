@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 //definimos el esquema del documento
 const productoSchema = new mongoose.Schema({
     nombre:String,
-    precio:Number
+    precio:Number,
+    categoria:String,
+    foto:String
 });
 //creamos el modelo
 
@@ -73,11 +75,12 @@ const buscaPrecioMayor = (precioMinimo)=>{
     .catch(err=>console.error('Error al obtener los productos',err));
   }
 
-  const creaNuevoProducto = ( m , p, c) =>{
+  const creaNuevoProducto = ( m , p, c, f) =>{
     const nuevoProducto = new Producto({
         nombre: m,
         precio: p,
-        categoria: c
+        categoria: c,
+        foto: f
       });
 
       // Guardar el ordenador en la base de datos
