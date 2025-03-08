@@ -10,8 +10,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Habilita el procesamiento de form-data
 require('dotenv').config();
 
-mongoose.connect(process.env.CADENA)
-  .then(() => console.log('Connected!')).catch(() => console.log('error!'));
+mongoose.connect(process.env.CADENA, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 30000  // Aumenta el tiempo de espera
+}).then(() => {
+  console.log('Conexión exitosa a mongoDB Atlas');
+}).catch(err => {
+  console.error('Error de conexión atlas:', err);
+});
 
 // Middleware para parsear el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
