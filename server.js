@@ -131,7 +131,7 @@ app.post('/login', (req, res) => {
           if (!isMatch) {
             return res.status(400).json({ message: 'Credenciales inválidas' });
           }
-          res.json({ success: true, message: 'Usuario autenticado correctamente' });
+          res.json({ success: true, message: 'Usuario autenticado correctamente', usuario :  user });
         });
     })
     .catch(error => {

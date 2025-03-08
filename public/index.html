@@ -63,6 +63,7 @@
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+          localStorage.setItem("usuario" ,  JSON.stringify(data.usuario))
             window.location.href = "productos.html"; // Redirigir si el login es exitoso
         } else {
             alert(data.message); // Mostrar error si las credenciales son incorrectas

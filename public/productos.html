@@ -16,13 +16,19 @@
           .animate-borderGlow {
             animation: borderGlow 1.5s infinite ease-in-out;
           }
+          #fotoUsuario {
+            width: 60px;  /* Ancho fijo */
+            height: 60px; /* Alto fijo */
+            object-fit: cover; /* Asegura que la imagen se ajuste y no se distorsione */
+        }
         </style>
     <title>Productos</title>
 </head>
 <body class="bg-zinc-900 text-white flex flex-col items-center">
-    <div class="self-end mt-4">
+    <div class="self-end mt-4 flex items-center">
+        <p id="mensajeBienvenido"></p>
+        <img src="" alt="" id="fotoUsuario" class=" w-50 p-2 border-4 border-white rounded-full bg-transparent animate-borderGlow focus:outline-none w-50  ms-1 me-5">
         <a href="insertar.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent">Nuevo Producto</a>
-        <a href="/subir.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent">Subir Producto</a>
         <a href="index.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent me-10">Cerrar sesión</a>
     </div>
     <h1 class="text-5xl my-4 p-5 bg-white text-zinc-900 border-white rounded bg-transparent text-black
@@ -42,7 +48,10 @@
         </tbody>
     </table>
     <script>
-    
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        document.getElementById("mensajeBienvenido").textContent = "Bienvenido! " + usuario.name;
+        document.getElementById("fotoUsuario").src = "uploads/"+usuario.foto;
+        console.log(localStorage.getItem("usuario"));
         fetch('/items')
         .then(response =>response.json())
         .then(productos=>{
