@@ -47,6 +47,7 @@
 
         </tbody>
     </table>
+    <p id="mensajeVacio"></p>
     <script>
         const usuario = JSON.parse(localStorage.getItem("usuario"));
         document.getElementById("mensajeBienvenido").textContent = "Bienvenido! " + usuario.name;
@@ -55,7 +56,9 @@
         fetch('/items')
         .then(response =>response.json())
         .then(productos=>{
-            
+            if(productos == null){
+                document.getElementById("mensajeVacio").textContent = "No tienes ningún producto aún";
+            }
             console.log(productos);
             for ( producto of productos){
                 fila = document.createElement('tr');
