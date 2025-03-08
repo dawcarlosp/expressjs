@@ -28,7 +28,7 @@
                  animate-borderGlow focus:outline-none p-5">Actualizar Producto</h1>
                  <img src="<%= producto.foto %>" alt="" class="mt-2 p-2 border-4 border-white bg-transparent animate-borderGlow focus:outline-none w-50 cursor-pointer" id="fotoProducto">
 <form action="/update_producto" class="flex flex-col items-center"  enctype="multipart/form-data" method="post">
-    <input type="file" id="foto" name="foto" accept="image/*" required class="hidden">
+    <input type="file" id="foto" name="foto" accept="image/*" class="hidden">
     <input type="hidden" name="id" value="<%= producto.id %>">
     <p>Nombre: <input type="text" name="nombre" id="nombre" class="mt-2 p-2 border-4 border-white rounded bg-transparent text-white
         animate-borderGlow focus:outline-none" value="<%= producto.nombre %>"></p>

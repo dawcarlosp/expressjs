@@ -40,7 +40,6 @@ app.post('/update_producto', upload.single('foto'), (req, res) => {
   console.log("soy la foto :" + foto)
   modeloProducto.buscaPorId(id).then(producto => {
     if (producto) {
-      console.log("Soy el demonio"+producto)
       producto.nombre = nombre;
       producto.precio = precio;
       producto.categoria = categoria;
@@ -58,33 +57,6 @@ app.post('/update_producto', upload.single('foto'), (req, res) => {
     }
   }).catch(err => res.status(500).send("Error en la búsqueda del producto"));
 });
-// Ruta para subir archivos
-app.post('/subir', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No se ha subido ningún archivo' });
-  }
-  res.json({ message: 'Archivo subido correctamente', file: req.file });
-});
-
-app.get('/usuarios', (req,res)=>{
-  User.find()
-  .then( users=>res.json(users))
-  .catch(error=>res.status(500).json({mensaje: Err}))
-
-}
-)
-
-app.get('/usuario/:id', (req,res)=>{
-  const id=req.params.id;
-  User.findById(id)
-  .then( user=>res.render('usuario',{user}))
-  .catch(error=>res.status(500).json({mensaje: Err}))
-
-}
-
-  
-)
-
 
 //registro de usuario
 app.post('/registro', upload.single('foto'), (req, res) => {
@@ -151,15 +123,6 @@ app.get("/items", (req, res) => {
 });
 
 
-// Obtener un ítem por ID
-app.get("/items/:id", (req, res) => {
-  const itemId = req.params.id;
-  modeloOrdenador.buscaPorId(itemId)
-  .then(
-    ordenador=>res.status(200).json(ordenador)
-  )
-  .catch(err=>res.status(500).send("error"))
-});
 
 
 // Crear un nuevo ítem
@@ -189,20 +152,6 @@ app.post("/items", upload.single('foto'), (req, res) => {
       });
 });
 
-// Actualizar un ítem existente
-app.put("/items/:id", (req, res) => {
-  const itemId = req.params.id;
-  ordenador = req.body;
-  //res.send(ordenador);
-  modeloOrdenador.actualizaOrdenador(itemId,ordenador)
-  .then(
-    ordenadorAtualizado=>res.status(200).json(ordenadorAtualizado)
-  )
-  .catch(err=>res.status(500).send("error al actualizar el ordenador"))
-
-});
-
-
 // Eliminar un ítem
 app.delete("/items/:id", (req, res) => {
   const itemId = req.params.id;
@@ -213,7 +162,6 @@ app.delete("/items/:id", (req, res) => {
   .catch(err=>res.status(500).send("error"))
 
 });
-
 
 // Iniciar el servidor
 app.listen(port, () => {
