@@ -34,20 +34,29 @@ app.get('/update_producto', (req, res) => {
   .catch(err=>res.status(500).send("error"))
 });
 
-app.post('/update_producto', (req, res) => {
-  const { id, marca, precio } = req.body;
-  modeloOrdenador.buscaPorId(id).then(producto => { 
+app.post('/update_producto', upload.single('foto'), (req, res) => {
+  const { id, nombre, precio, categoria } = req.body;
+  const foto = req.file ? req.file.filename : null;
+  console.log("soy la foto :" + foto)
+  modeloProducto.buscaPorId(id).then(producto => {
     if (producto) {
-      producto.ma = marca;
+      console.log("Soy el demonio"+producto)
+      producto.nombre = nombre;
       producto.precio = precio;
-      ordenador.save()
-      .then(ordenador=>res.redirect('/'))
-      .catch(err=>res.status(500).send("error"))
+      producto.categoria = categoria;
+      if (foto) {
+        console.log("donde me meti")
+        producto.foto = "uploads/" +  req.file.filename;
+        console.log(req.file.filename)
+      }
+      
+      producto.save()
+        .then(() => res.redirect('/productos.html'))
+        .catch(err => res.status(500).send("Error al actualizar el producto"));
     } else {
-      res.status(404).send('Ordenador no encontrado');
+      res.status(404).send('Producto no encontrado');
     }
-  });
-
+  }).catch(err => res.status(500).send("Error en la búsqueda del producto"));
 });
 // Ruta para subir archivos
 app.post('/subir', upload.single('file'), (req, res) => {
