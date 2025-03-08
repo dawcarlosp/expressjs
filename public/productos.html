@@ -33,6 +33,7 @@
                  animate-borderGlow focus:outline-none">
                <th>Nombre</th>
                <th>Precio</th>
+               <th></th>
                <th></th>                
             </tr>
         </thead>
@@ -51,23 +52,26 @@
                 fila = document.createElement('tr');
                 fila.id = producto._id;
                 fila.innerHTML = `
-                <td class="border p-4">${producto.nombre}</td>
-                <td class="border p-4">${producto.precio}</td>
-                <td class="border p-4"><button onclick=eliminaProducto('${producto._id}') class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 animate-borderGlow focus:outline-none bg-transparent">Borrar producto</button></td>`;
+                <td class="border p-4 animate-borderGlow focus:outline-none bg-transparent">${producto.nombre}</td>
+                <td class="border p-4 animate-borderGlow focus:outline-none bg-transparent">${producto.precio}€</td>
+                <td class="border" p-4><img src="${producto.foto}" class="w-50 animate-borderGlow focus:outline-none bg-transparent"></img></td>
+                <td class="border p-4"><button onclick=eliminaProducto('${producto._id}') class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 animate-borderGlow focus:outline-none bg-transparent me-1 cursor-pointer">Borrar producto</button><button onclick=actualizaProducto('${producto._id}') class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 animate-borderGlow focus:outline-none bg-transparent cursor-pointer">Actualiza producto</button></td>`;
                 document.getElementById('cuerpo-tabla').appendChild(fila);
             }
            
         })
-     
+        function actualizaProducto(id) {
+            window.location.href = `/update_producto?id=${id}`;
+    }
         function eliminaProducto(id){
             if (confirm("¿Está seguro/a?")){
                 fetch('/items/'+id,{
                     method:'DELETE'   
                 }).
                 then(response=>{
-                    if (  esponse.ok ) {
+                    if (  response.ok ) {
                         document.getElementById(id).remove();
-                        alert("Ordenador eliminado");
+                        alert("Producto eliminado");
 
                     }
                     else

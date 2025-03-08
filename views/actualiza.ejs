@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Actualizar producto</title>
+    <style>
+        @keyframes borderGlow {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+          }
+          .before\:animate-borderGlow::before {
+            animation: borderGlow 1.5s infinite ease-in-out;
+          }
+          .animate-borderGlow {
+            animation: borderGlow 1.5s infinite ease-in-out;
+          }
+        </style>
+</head>
+<body class="bg-zinc-900 text-white flex flex-col items-center">
+    <div class="self-end mt-4">
+        <a href="productos.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent ">Volver atrás</a>
+        <a href="index.html" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent me-10">Cerrar sesión</a>
+    </div>
+<h1  class="text-4xl my-4 bg-white text-zinc-900 border-white rounded bg-transparent text-black
+                 animate-borderGlow focus:outline-none p-5">Actualizar Producto</h1>
+                 <img src="<%= producto.foto %>" alt="" class="mt-2 p-2 border-4 border-white bg-transparent animate-borderGlow focus:outline-none w-50 cursor-pointer" id="fotoProducto">
+<form action="" class="flex flex-col items-center">
+    <input type="file" id="foto" name="foto" accept="image/*" required class="hidden">
+    <p>Nombre: <input type="text" name="nombre" id="nombre" class="mt-2 p-2 border-4 border-white rounded bg-transparent text-white
+        animate-borderGlow focus:outline-none" value="<%= producto.nombre %>"></p>
+    <p>Precio: <input type="number" name="precio" id="precio" class="mt-2 p-2 border-4 border-white rounded bg-transparent text-white
+        animate-borderGlow focus:outline-none" value="<%= producto.precio %>"></p>
+    <p>Categoría: <input type="text" name="categoria" id="categoria" class="mt-2 p-2 border-4 border-white rounded bg-transparent text-white
+        animate-borderGlow focus:outline-none" value="<%= producto.categoria %>"></p>
+    <button id="btn-insertar" class="border rounded-xl p-2 hover:scale-110 hover:bg-white hover:text-zinc-900 my-2 animate-borderGlow focus:outline-none bg-transparent">Actualizar</button>
+</form>                
+
+
+<script>
+    document.getElementById("fotoProducto").addEventListener("click", () => {
+        document.getElementById("foto").click();
+    })
+    // Evento cuando el usuario selecciona un archivo
+    document.getElementById("foto").addEventListener("change", (event) => {
+        const file = event.target.files[0]; // Obtener el archivo seleccionado
+
+        if (file) {
+            const reader = new FileReader(); // Crear un nuevo FileReader
+
+            // Definir lo que se debe hacer cuando el archivo se haya cargado
+            reader.onload = function (e) {
+                const preview = document.getElementById("fotoProducto"); // Obtener la imagen del contenedor
+                preview.src = e.target.result; // Establecer la imagen seleccionada como fuente
+            };
+
+            // Leer el archivo como URL de datos (data URL)
+            reader.readAsDataURL(file);
+        }
+    });
+    const insertarProducto = () => {
+        let nombre = document.getElementById('nombre').value.trim();
+        let precio = document.getElementById('precio').value.trim();
+        let categoria = document.getElementById('categoria').value.trim();
+        let foto = document.getElementById('foto').files[0];
+
+        if (!nombre || !precio || !categoria || !foto) {
+            alert("Todos los campos y la imagen son obligatorios");
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('precio', precio);
+        formData.append('categoria', categoria);
+        formData.append('foto', foto);
+
+        fetch('/items', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Producto insertado");
+            } else {
+                alert("No se insertó el producto");
+            }
+        })
+        .catch(err => {
+            alert("Error: " + err);
+        });
+    };
+
+    document.getElementById("btn-insertar").addEventListener('click',insertarProducto)
+
+</script>
+</body>
+</html>

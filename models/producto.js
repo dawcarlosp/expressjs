@@ -48,7 +48,7 @@ const buscaPrimero = ()=>{
     .then( producto=>{
       if (producto) {
         console.log('Primer producto encontrado',producto);
-        return ordenador;
+        return producto;
       } else {
         console.log('No se encontró ningún registro con el id'+ id);
         return null;

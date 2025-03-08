@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const multer  = require('multer')
@@ -15,13 +16,39 @@ mongoose.connect(process.env.CADENA)
 // Middleware para parsear el cuerpo de las solicitudes en formato JSON
 app.use(express.json());
 app.use(express.static('public'));
+// Servir la carpeta de uploads como pública
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/fotos', express.static('uploads'));
 app.set('view engine','ejs');
 app.set('views', './views');
 const modeloProducto = require('./models/producto');
 const User = require("./models/User");
 
+//Actualizar producto desde la tabla
+app.get('/update_producto', (req, res) => {
+  const id = req.query.id;
+  modeloProducto.buscaPorId(id)
+  .then(
+    producto=>res.render('actualiza', { producto })
+  )
+  .catch(err=>res.status(500).send("error"))
+});
 
+app.post('/update_producto', (req, res) => {
+  const { id, marca, precio } = req.body;
+  modeloOrdenador.buscaPorId(id).then(producto => { 
+    if (producto) {
+      producto.ma = marca;
+      producto.precio = precio;
+      ordenador.save()
+      .then(ordenador=>res.redirect('/'))
+      .catch(err=>res.status(500).send("error"))
+    } else {
+      res.status(404).send('Ordenador no encontrado');
+    }
+  });
+
+});
 // Ruta para subir archivos
 app.post('/subir', upload.single('file'), (req, res) => {
   if (!req.file) {
@@ -128,17 +155,30 @@ app.get("/items/:id", (req, res) => {
 
 // Crear un nuevo ítem
 app.post("/items", upload.single('foto'), (req, res) => {
-    nombre= req.body.nombre;
-    precio= req.body.precio;
-    categoria= req.body.categoria;
-    modeloProducto.creaNuevoProducto(nombre,precio,categoria)
-    .then(
-      producto=>res.status(200).json(producto)
-    )
-    .catch(err=>res.status(500).send("error"))
+  const nombre = req.body.nombre;
+  const precio = req.body.precio;
+  const categoria = req.body.categoria;
+  const foto = req.file.path;  // Ruta donde se guarda la imagen
 
+  // Llamar al método para crear el nuevo producto
+  modeloProducto.creaNuevoProducto(nombre, precio, categoria, foto)
+      .then(producto => {
+          // Respuesta exitosa
+          res.status(200).json({
+              success: true, // Indicamos que la operación fue exitosa
+              message: "Producto insertado correctamente",
+              producto: producto // Enviamos el objeto producto
+          });
+      })
+      .catch(err => {
+          // Si ocurre un error, se maneja y responde con error
+          res.status(500).json({
+              success: false,  // Indicamos que hubo un error
+              message: "Error al insertar el producto", 
+              error: err.message // Enviamos el mensaje del error
+          });
+      });
 });
-
 
 // Actualizar un ítem existente
 app.put("/items/:id", (req, res) => {
@@ -157,9 +197,9 @@ app.put("/items/:id", (req, res) => {
 // Eliminar un ítem
 app.delete("/items/:id", (req, res) => {
   const itemId = req.params.id;
-  modeloOrdenador.borraOrdenador(itemId)
+  modeloProducto.borraProducto(itemId)
   .then(
-    ordenador=>res.status(200).json(ordenador)
+    producto=>res.status(200).json(producto)
   )
   .catch(err=>res.status(500).send("error"))
 
