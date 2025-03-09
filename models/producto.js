@@ -68,6 +68,19 @@ const Producto = mongoose.model('Producto',productoSchema, 'productos');
         });
 
   }
-
-
-  module.exports = {  creaNuevoProducto,buscaTodos,buscaPorId }
+  const borraProducto = (idProductoParaBorrar) =>{
+    return Producto.findByIdAndDelete(idProductoParaBorrar)
+    .then(productoEliminado => {
+      if (productoEliminado) {
+        console.log('Producto eliminado:', productoEliminado);
+        return productoEliminado;
+      } else {
+        console.log('No se encontró ningún producto con ese ID.');
+        return null;
+      }
+    })
+    .catch(err => {console.error('Error al eliminar el producto:', err);
+      throw err;
+    });
+  }
+  module.exports = {  creaNuevoProducto,buscaTodos,buscaPorId,borraProducto }

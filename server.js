@@ -10,7 +10,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Habilita el procesamiento de form-data
 require('dotenv').config();
 
-mongoose.connect(process.env.CADENA, {
+const uri = process.env.CADENA;
+
+console.log("Conectando a:", uri);
+mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 30000  // Aumenta el tiempo de espera
