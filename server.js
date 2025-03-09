@@ -13,7 +13,7 @@ require('dotenv').config();
 const uri = process.env.CADENA;
 
 console.log("Conectando a:", uri);
-mongoose.connect(url, {
+mongoose.connect(process.env.CADENA, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 30000  // Aumenta el tiempo de espera
